@@ -10,14 +10,31 @@ func main() {
 
 }
 
-func sortedArrayToBST(nums []int) *TreeNode {
-	if len(nums) == 0 {
-		return nil
-	}
-	mid := len(nums) / 2
-	node := &TreeNode{Val: nums[mid]}
-	node.Left = sortedArrayToBST(nums[:mid])
-	node.Right = sortedArrayToBST(nums[mid+1:])
-	return node
+func isBalanced(root *TreeNode) bool {
+	return check(root) != -1
+}
 
+func check(node *TreeNode) int {
+	if node == nil {
+		return 0
+	}
+	left := check(node.Left)
+	if left == -1 {
+		return -1
+	}
+	right := check(node.Right)
+	if right == -1 {
+		return -1
+	}
+
+	if abs(left-right) > 1 {
+		return -1
+	}
+	return 1 + max(left, right)
+}
+func abs(x int) int {
+	if x < 0 {
+		return -x
+	}
+	return x
 }
