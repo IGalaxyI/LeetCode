@@ -10,31 +10,15 @@ func main() {
 
 }
 
-func isBalanced(root *TreeNode) bool {
-	return check(root) != -1
-}
-
-func check(node *TreeNode) int {
-	if node == nil {
-		return 0
+func hasPathSum(root *TreeNode, targetSum int) bool {
+	need := targetSum
+	if root == nil {
+		return false
+	} else if root.Left == nil && root.Right == nil {
+		return need == root.Val
+	} else {
+		left := hasPathSum(root.Left, need-root.Val)
+		right := hasPathSum(root.Right, need-root.Val)
+		return left || right
 	}
-	left := check(node.Left)
-	if left == -1 {
-		return -1
-	}
-	right := check(node.Right)
-	if right == -1 {
-		return -1
-	}
-
-	if abs(left-right) > 1 {
-		return -1
-	}
-	return 1 + max(left, right)
-}
-func abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
 }
