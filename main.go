@@ -10,7 +10,7 @@ func main() {
 
 }
 
-func levelOrder(root *TreeNode) [][]int {
+func zigzagLevelOrder(root *TreeNode) [][]int {
 	result := [][]int{}
 
 	var dfs func(*TreeNode, int)
@@ -20,7 +20,12 @@ func levelOrder(root *TreeNode) [][]int {
 		} else if len(result) == depth {
 			result = append(result, []int{})
 		}
-		result[depth] = append(result[depth], node.Val)
+		if depth%2 == 0 {
+			result[depth] = append(result[depth], node.Val)
+		} else {
+			result[depth] = append([]int{node.Val}, result[depth]...)
+
+		}
 		dfs(node.Left, depth+1)
 		dfs(node.Right, depth+1)
 	}
@@ -28,5 +33,4 @@ func levelOrder(root *TreeNode) [][]int {
 	dfs(root, 0)
 
 	return result
-
 }
