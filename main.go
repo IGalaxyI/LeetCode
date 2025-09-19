@@ -10,15 +10,23 @@ func main() {
 
 }
 
-func hasPathSum(root *TreeNode, targetSum int) bool {
-	need := targetSum
-	if root == nil {
-		return false
-	} else if root.Left == nil && root.Right == nil {
-		return need == root.Val
-	} else {
-		left := hasPathSum(root.Left, need-root.Val)
-		right := hasPathSum(root.Right, need-root.Val)
-		return left || right
+func levelOrder(root *TreeNode) [][]int {
+	result := [][]int{}
+
+	var dfs func(*TreeNode, int)
+	dfs = func(node *TreeNode, depth int) {
+		if node == nil {
+			return
+		} else if len(result) == depth {
+			result = append(result, []int{})
+		}
+		result[depth] = append(result[depth], node.Val)
+		dfs(node.Left, depth+1)
+		dfs(node.Right, depth+1)
 	}
+
+	dfs(root, 0)
+
+	return result
+
 }
