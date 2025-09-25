@@ -5,42 +5,23 @@ import (
 )
 
 func main() {
-	fmt.Println(myAtoi("-042"))
+	fmt.Println(maxArea([]int{1, 8, 6, 2, 5, 4, 8, 3, 7}))
 }
 
-func myAtoi(s string) int {
-	const MinInt32 = -1 << 31
-	const MaxInt32 = 1<<31 - 1
-
-	i := 0
-	for i < len(s) && s[i] == ' ' {
-		i++
-	}
-
-	sign := 1
-
-	if i < len(s) {
-		if s[i] == '-' {
-			sign = -1
-			i++
-		} else if s[i] == '+' {
-			i++
+func maxArea(height []int) int {
+	left := 0
+	right := len(height) - 1
+	maxArea := 0
+	for left < right {
+		area := (right - left) * min(height[left], height[right])
+		if area > maxArea {
+			maxArea = area
+		}
+		if height[left] < height[right] {
+			left++
+		} else if height[right] <= height[left] {
+			right--
 		}
 	}
-
-	res := 0
-	for i < len(s) && s[i] >= '0' && s[i] <= '9' {
-		digit := int(s[i] - '0')
-
-		if res > (MaxInt32-digit)/10 {
-			if sign == 1 {
-				return MaxInt32
-			}
-			return MinInt32
-		}
-		res = res*10 + digit
-		i++
-	}
-
-	return sign * res
+	return maxArea
 }
