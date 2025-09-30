@@ -2,46 +2,40 @@ package main
 
 import (
 	"fmt"
-	"sort"
 )
 
 func main() {
-	fmt.Println(threeSumClosest([]int{-1, 2, 1, -4}, 5))
+	fmt.Println(letterCombinations("23"))
 }
 
-func threeSumClosest(nums []int, target int) int {
-	sort.Ints(nums)
-	left := 0
-	right := 0
-	sum := 0
-	res := nums[0] + nums[1] + nums[2]
+func letterCombinations(digits string) []string {
+	if len(digits) == 0 {
+		return []string{}
+	}
+	mapping := map[byte]string{
+		'2': "abc",
+		'3': "def",
+		'4': "ghi",
+		'5': "jkl",
+		'6': "mno",
+		'7': "pqrs",
+		'8': "tuv",
+		'9': "wxyz",
+	}
+	res := []string{}
+	var dfs func(pos int, prefix string)
 
-	for i := 0; i < len(nums)-2; i++ {
-		if i > 0 && nums[i] == nums[i-1] {
-			continue
+	dfs = func(pos int, prefix string) {
+		if pos == len(digits) {
+			res = append(res, prefix)
+			return
 		}
-		left = i + 1
-		right = len(nums) - 1
-		for left < right {
-			sum = nums[i] + nums[left] + nums[right]
-			if abs(sum-target) < abs(res-target) {
-				res = sum
-			}
-			if sum == target {
-				return target
-			} else if sum < target {
-				left++
-			} else if sum > target {
-				right--
-			}
+		letters := mapping[digits[pos]]
+		for i := 0; i < len(letters); i++ {
+			dfs(pos+1, prefix+letters[i:i+1])
 		}
 	}
+	dfs(0, "")
 	return res
-}
 
-func abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
 }
