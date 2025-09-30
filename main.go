@@ -2,40 +2,52 @@ package main
 
 import (
 	"fmt"
+	"sort"
 )
 
 func main() {
-	fmt.Println(letterCombinations("23"))
+	fmt.Println(fourSum([]int{1, 0, -1, 0, -2, 2}, 0))
 }
 
-func letterCombinations(digits string) []string {
-	if len(digits) == 0 {
-		return []string{}
-	}
-	mapping := map[byte]string{
-		'2': "abc",
-		'3': "def",
-		'4': "ghi",
-		'5': "jkl",
-		'6': "mno",
-		'7': "pqrs",
-		'8': "tuv",
-		'9': "wxyz",
-	}
-	res := []string{}
-	var dfs func(pos int, prefix string)
+func fourSum(nums []int, target int) [][]int {
+	sort.Ints(nums)
+	result := [][]int{}
+	sum := 0
 
-	dfs = func(pos int, prefix string) {
-		if pos == len(digits) {
-			res = append(res, prefix)
-			return
+	for i := 0; i < len(nums)-3; i++ {
+		if i > 0 && nums[i] == nums[i-1] {
+			continue
 		}
-		letters := mapping[digits[pos]]
-		for i := 0; i < len(letters); i++ {
-			dfs(pos+1, prefix+letters[i:i+1])
-		}
-	}
-	dfs(0, "")
-	return res
 
+		for j := i + 1; j < len(nums)-2; j++ {
+			if j > i+1 && nums[j] == nums[j-1] {
+				continue
+			}
+
+			left := j + 1
+			right := len(nums) - 1
+
+			for left < right {
+				sum = nums[i] + nums[j] + nums[left] + nums[right]
+				if sum < target {
+					left++
+				} else if sum > target {
+					right--
+				} else {
+					result = append(result, []int{nums[i], nums[j], nums[left], nums[right]})
+					left++
+					right--
+					for left < right && nums[left] == nums[left-1] {
+						left++
+					}
+					for left < right && nums[right] == nums[right+1] {
+						right--
+					}
+				}
+
+			}
+		}
+
+	}
+	return result
 }
